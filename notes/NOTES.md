@@ -37,3 +37,18 @@ def __init__(self, employees=None):
         self.employees = employees
     else:
         employees=[]
+
+------------------------------------------
+
+## Day 2 - decorators, generators
+
+### Decorator Stacking Order
+- Decorators apply bottom-up (innermost first)
+- @classmethod and @staticmethod must always go on TOP (outermost)
+- @classmethod
+  @my_decorator     ← correct
+  def method(cls):
+
+- @my_decorator
+  @classmethod        ← this breaks — classmethod object is not callable
+  def method(cls):
