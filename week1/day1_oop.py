@@ -38,6 +38,14 @@ class Employee:
         self.last = last
         self.salary = salary
     
+    @classmethod
+    def from_csv(cls, csv_str):
+        for line in csv_str.splitlines():
+            if not line.strip():
+                continue
+            first, last, salary = line.split(",")
+            yield cls(first, last, int(salary))
+
     @staticmethod
     def is_workday(day):
         if day.weekday()==5 or day.weekday()==6:
@@ -115,3 +123,10 @@ print(emp2.full_name())
 print(Employee.calculate_tax(50000, 0.5))
 print(Employee.calculate_tax(50000, 0.5))
 print(Employee.calculate_tax(50000, 0.3))
+
+#test generator
+csv_data = """John,Doe,50000
+Jane,Smith,60000
+Bob,Jones,70000"""
+for emp in Employee.from_csv(csv_data):
+    print(emp.full_name(), emp.salary)
