@@ -40,15 +40,35 @@ def __init__(self, employees=None):
 
 ------------------------------------------
 
-## Day 2 - decorators, generators
+## Day 2 - Decorators , Generators
 
-### Decorator Stacking Order
-- Decorators apply bottom-up (innermost first)
-- @classmethod and @staticmethod must always go on TOP (outermost)
-- @classmethod
-  @my_decorator     ← correct
-  def method(cls):
+### Decorators
+- A decorator is a function that takes a function and returns a new function
+- @functools.wraps preserves original function name and docstring
+- Decorator stacking order: bottom-up(innermost first). @classmethod/@staticmethod always on TOP
+    -   @classmethod
+        @my_decorator     ← correct
+        def method(cls):
 
-- @my_decorator
-  @classmethod        ← this breaks — classmethod object is not callable
-  def method(cls):
+    -   @my_decorator
+        @classmethod        ← this breaks — classmethod object is not callable
+        def method(cls):
+- Real use: @torch.no_grad() in PyTorch is a decorator
+
+### Generators
+- yield pauses execution and resumes on next() call
+- Generator holds ~200 bytes regardless of dataset size (vs full list in RAM)
+- Real use: HuggingFace loads 100GB datasets with generators
+- read_in_chunks = foundation of RAG text chunking
+
+### Key difference
+- list comprehension: [x*x for x in range(n)]  → all in memory
+- generator expression: (x*x for x in range(n)) → lazy, one at a time
+
+--------------------------------------------
+
+## Day 3 Plan - Async, Context Managers, Type Hints
+- async/await and why it matters for LLM streaming
+- context managers (with statement)
+- type hints - annotating all my previous functions
+- build: async web scraper with aiohttp
