@@ -1,2 +1,6 @@
-# Version: MAIN BRANCH - second edit
+<<<<<<< HEAD
+# Version: RESOLVED — keeping main's version
+=======
+
+>>>>>>> conflict-test
 "# Expense Tracker" 
