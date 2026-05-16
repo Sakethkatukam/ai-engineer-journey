@@ -43,7 +43,7 @@ async def fake_fetch(url:str)->str:
 async def fetch_all_concurrent(urls: List[str]) -> List[str]:
     coroutines=[fake_fetch(url) for url in urls]
     results=await asyncio.gather(*coroutines)
-    return results
+    return list(results)
 
 async def fetch_all_sequential(urls:List[str])->List[str]:
     results=[]

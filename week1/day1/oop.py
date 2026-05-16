@@ -33,13 +33,13 @@ def cache(func):
     return wrapper
 class Employee:
     raise_amount = 1.04
-    def __init__(self, first, last, salary):
+    def __init__(self, first:str, last:str, salary:int)->None:
         self.first = first
         self.last = last
         self.salary = salary
     
     @classmethod
-    def from_csv(cls, csv_str):
+    def from_csv(cls, csv_str:str)->"Employee":
         for line in csv_str.splitlines():
             if not line.strip():
                 continue
@@ -47,54 +47,54 @@ class Employee:
             yield cls(first, last, int(salary))
 
     @staticmethod
-    def is_workday(day):
+    def is_workday(day:datetime)->bool:
         if day.weekday()==5 or day.weekday()==6:
             return False
         return True
 
     @staticmethod
     @cache
-    def calculate_tax(salary, rate):
+    def calculate_tax(salary:float, rate:float)->float:
         time.sleep(0.3) 
         return salary*rate
     
     @classmethod
     @logger
-    def from_string(cls, emp_str):
+    def from_string(cls, emp_str:str)->"Employee":
         first,last,salary=emp_str.split("-")
         return cls(first, last, int(salary))
 
-    def full_name(self):
+    def full_name(self)->str:
         return "{} {}".format(self.first, self.last)
 
     @timer
-    def apply_raise(self):
+    def apply_raise(self)->None:
         self.salary=int(self.salary*self.raise_amount)
     
-    def print_email(self):
+    def print_email(self)->None:
         print("{}.{}@company.com".format(self.first,self.last))
 
 class Developer(Employee):
     language = "Python"
-    def __init__(self,first,last,salary,language):
+    def __init__(self,first:str,last:str,salary:int,language:str)->None:
         super().__init__(first,last,salary)
         self.language = language
 
-    def print_language(self):
+    def print_language(self)->None:
         print("{}".format(self.language))
     
 class Manager(Employee):
-    def __init__(self,first,last,salary,employees=None):
+    def __init__(self,first:str,last:str,salary:int,employees:list=None)->None:
         super().__init__(first,last,salary)
         if employees is None:
             self.employees = []
         else:
             self.employees=employees
     
-    def add_employee(self,emp):
+    def add_employee(self,emp:Employee)->None:
         self.employees.append(emp)
     
-    def remove_employee(self,emp):
+    def remove_employee(self,emp:Employee)->None:
         self.employees.remove(emp)
     
 # emp1 = Employee("John", "Doe", 50000)

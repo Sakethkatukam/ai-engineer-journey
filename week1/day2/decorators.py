@@ -13,7 +13,7 @@ def timer(func):
     return wrapper
 
 @timer
-def slow_function(n):
+def slow_function(n:int)->str:
     time.sleep(n)
     return "done"
 
@@ -30,7 +30,7 @@ def logger(func):
     return wrapper
 
 @logger
-def add(a,b):
+def add(a:int, b:int)->int:
     return a+b
 
 # add(3,6)
@@ -50,7 +50,7 @@ def cache(func):
     return wrapper
 
 @cache
-def slow_multiply(a,b):
+def slow_multiply(a:int, b:int)->int:
     time.sleep(1)
     return a*b
 
@@ -60,7 +60,7 @@ def slow_multiply(a,b):
 
 @timer
 @logger
-def batch(batch_size):
+def batch(batch_size:int)->str:
     time.sleep(1)
     return f"processed {batch_size} items"
 

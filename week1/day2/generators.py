@@ -1,4 +1,4 @@
-def infinite_counter(start=0):
+def infinite_counter(start:int=0)->int:
     while True:
         yield start
         start+=1
@@ -9,7 +9,7 @@ print(next(counter))
 print(next(counter))
 print(next(counter))
 
-def read_in_chunks(text, chunk_size):
+def read_in_chunks(text:str, chunk_size:int)->str:
     for i in range(0, len(text), chunk_size):
         yield text[i:i+chunk_size]
     
