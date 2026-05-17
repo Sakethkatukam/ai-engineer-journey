@@ -1,0 +1,23 @@
+[
+  {
+    "id": 1,
+    "date": "2026-05-17",
+    "description": "Lunch",
+    "amount": 250.0,
+    "category": "food"
+  },
+  {
+    "id": 3,
+    "date": "2026-05-17",
+    "description": "Python book",
+    "amount": 899.0,
+    "category": "learning"
+  },
+  {
+    "id": 4,
+    "date": "2026-05-17",
+    "description": "Dinner",
+    "amount": 420.0,
+    "category": "food"
+  }
+]
