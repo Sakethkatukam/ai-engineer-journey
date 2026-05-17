@@ -175,3 +175,16 @@ The status line arrives first — body can still be in transit.
 
 --------------------------------------------
 
+## Day 4
+
+Few git commands:
+
+Situation                   Command
+--------------------------|-----------------------------
+Create + switch branch      git checkout -b branch-name
+Switch branch               git checkout main
+Merge branch into current   git merge branch-name
+After resolving conflict    git add file → git commit
+Delete branch               git branch -D branch-name
+See history                 git log --oneline
+
