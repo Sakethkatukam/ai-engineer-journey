@@ -177,14 +177,201 @@ The status line arrives first — body can still be in transit.
 
 ## Day 4
 
-Few git commands:
+╔══════════════════════════════════════════════════════════════╗
+║           DAY 4 NOTES — Git + File I/O + CLI Tracker        ║
+║           Week 1 · Phase 1 · Foundation                     ║
+╚══════════════════════════════════════════════════════════════╝
 
-Situation                   Command
---------------------------|-----------------------------
-Create + switch branch      git checkout -b branch-name
-Switch branch               git checkout main
-Merge branch into current   git merge branch-name
-After resolving conflict    git add file → git commit
-Delete branch               git branch -D branch-name
-See history                 git log --oneline
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+GIT CORE WORKFLOW
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
+Three layers:
+  Working Directory → Staging Area → Repository
+  (your files)         (git add)      (git commit)
+
+Daily commands:
+  git status                      always run first
+  git add .                       stage all changes
+  git commit -m "message"         save snapshot
+  git push origin main            upload to GitHub
+  git pull origin main            download latest
+
+Branch workflow:
+  git checkout -b feature/name    create + switch
+  git checkout main               switch back
+  git merge feature/name          bring changes in
+  git branch -D feature/name      delete branch
+
+History:
+  git log --oneline               compact history
+  git diff                        what changed
+
+Merge conflict — when it happens:
+  Both branches must have NEW commits on the SAME line
+  after they diverged. If only one side changed → fast-forward.
+
+Conflict markers:
+  <<<<<<< HEAD          ← your current branch version
+  your version
+  =======
+  their version
+  >>>>>>> branch-name   ← incoming branch version
+
+  Fix: delete markers, keep what you want, then:
+  git add file.py
+  git commit -m "fix: resolve conflict"
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ARGPARSE — CLI ARGUMENT PARSING
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+What it does:
+  Converts command-line strings into a Python args object
+  "add --amount 250" → args.command="add", args.amount=250.0
+
+Setup pattern:
+  parser = argparse.ArgumentParser(prog="tool", description="...")
+  subparsers = parser.add_subparsers(dest="command", required=True)
+
+  sub = subparsers.add_parser("add", help="Add something")
+  sub.add_argument("--name", "-n", required=True, type=str)
+  sub.add_argument("--amount", "-a", required=True, type=float)
+  sub.add_argument("--category", "-c", default="general")
+
+  args = parser.parse_args()
+
+Argument options:
+  required=True       must be provided
+  type=float/int      auto-convert from string
+  default="general"   used if argument missing
+  help="..."          shown in --help
+
+Accessing values:
+  args.command        which subcommand was called
+  args.amount         the float value
+  args.description    the string value
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+FILE I/O — READING AND WRITING FILES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Three modes:
+  "r"  read   — file must exist
+  "w"  write  — creates or overwrites
+  "a"  append — adds to end
+
+Always use with block:
+  with open("file.txt", "r") as f:
+      content = f.read()
+  # file auto-closed even if error occurs
+
+JSON operations:
+  import json
+
+  # Write dict to file
+  with open("data.json", "w") as f:
+      json.dump(data, f, indent=2)
+
+  # Read file to dict
+  with open("data.json", "r") as f:
+      data = json.load(f)
+
+  # String conversions (no file)
+  text = json.dumps(data)        # dict → string
+  data = json.loads(text)        # string → dict
+
+  KEY DIFFERENCE:
+    json.load(f)   → reads from FILE OBJECT
+    json.loads(s)  → reads from STRING
+    (the 's' in loads = string)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+PATHLIB — MODERN FILE PATH HANDLING
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Why pathlib over os.path:
+  Path is an OBJECT with methods, not just a string
+  / operator joins paths safely on any OS (Windows/Linux/Mac)
+  Has direct read/write methods — no need for open()
+
+Creating paths:
+  Path("data/file.json")             from string
+  Path(__file__).parent / "file.json" relative to current script
+  Path("folder") / "sub" / "file"    join multiple parts
+
+Key methods:
+  p.exists()                         True/False
+  p.parent.mkdir(exist_ok=True)      create folder safely
+  p.read_text(encoding="utf-8")      entire file as string
+  p.write_text("...", encoding="utf-8") write string to file
+
+Key properties:
+  p.name      "expenses.json"    full filename
+  p.stem      "expenses"         without extension
+  p.suffix    ".json"            just extension
+  p.parent    Path("data")       containing folder
+
+Standard project pattern:
+  DATA_FILE = Path(__file__).parent / "data.json"
+
+  def load():
+      if not DATA_FILE.exists():
+          return []
+      return json.loads(DATA_FILE.read_text(encoding="utf-8"))
+
+  def save(data):
+      DATA_FILE.write_text(
+          json.dumps(data, indent=2), encoding="utf-8"
+      )
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+F-STRING FORMAT SPECIFIERS — COLUMN ALIGNMENT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Pattern: f"{value : align width .decimals}"
+
+Alignment:
+  <   left-align   (default for strings)
+  >   right-align  (default for numbers)
+  ^   center
+
+Examples:
+  f"{'food':<10}"    →  'food      '   (10 wide, left)
+  f"{'food':>10}"    →  '      food'   (10 wide, right)
+  f"{'food':^10}"    →  '   food   '   (10 wide, center)
+
+For numbers:
+  f"{250.0:>10.2f}"  →  '    250.00'  (10 wide, right, 2 decimals)
+  f"{250.0:<10.2f}"  →  '250.00    '  (10 wide, left,  2 decimals)
+
+Why it matters:
+  Without it: columns misalign when values have different lengths
+  With it:    every row lines up perfectly in a table
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+self.expenses — HOW OOP STATE WORKS IN THE TRACKER
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+self = the instance of the class (the specific object created)
+self.expenses = the list that belongs to THAT object
+
+Full lifecycle every run:
+  1. main() creates: tracker = ExpenseTracker()
+  2. __init__ runs:  self.expenses = load_expenses()
+                     → reads expenses.json into memory
+  3. Command runs:   tracker.add() / remove() / list()
+                     → modifies self.expenses in memory
+                     → calls save_expenses() to write back to JSON
+  4. Script ends:    memory wiped. JSON file persists on disk.
+
+Why load → modify → save every time:
+  Python memory is temporary. Disk (JSON) is permanent.
+  JSON is your database. self.expenses is the working copy.
+
+How remove() works:
+  self.expenses = [e for e in self.expenses if e["id"] != id]
+  # builds new list keeping everything EXCEPT the target id
+  # then saves the shorter list to JSON
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
