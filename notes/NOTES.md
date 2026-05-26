@@ -38,7 +38,7 @@ def __init__(self, employees=None):
     else:
         employees=[]
 
-------------------------------------------
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Day 2 - Decorators , Generators
 
@@ -65,7 +65,7 @@ def __init__(self, employees=None):
 - list comprehension: [x*x for x in range(n)]  → all in memory
 - generator expression: (x*x for x in range(n)) → lazy, one at a time
 
---------------------------------------------
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 # Day 3 — Async/Await, Context Managers, Type Hints
 
@@ -173,9 +173,7 @@ Opening/closing an HTTP session involves I/O (network).
 The response body to finish downloading over the network.
 The status line arrives first — body can still be in transit.
 
---------------------------------------------
-
-## Day 4
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ╔══════════════════════════════════════════════════════════════╗
 ║           DAY 4 NOTES — Git + File I/O + CLI Tracker        ║
@@ -221,6 +219,155 @@ Conflict markers:
   Fix: delete markers, keep what you want, then:
   git add file.py
   git commit -m "fix: resolve conflict"
+
+-------
+# Git Commit + Vim Notes
+
+# Commiting Changes
+
+## Method 1 — Direct Commit Message (Recommended)
+git commit -m "Your message"
+
+Example: git commit -m "Added notes"
+- This avoids opening Vim.
+
+## Method 2 — Manual Commit Message
+git commit
+-This opens Vim editor to write the message manually.
+
+---
+
+# Basic Vim Commands for Git
+
+## 1. Enter Insert Mode
+Press:
+i
+
+Now you can type normally.
+
+Example:
+Added Python OOP notes
+
+---
+
+## 2. Exit Insert Mode
+Press:
+Esc
+
+---
+
+## 3. Save and Quit Vim
+Type:
+:wq
+
+Then press Enter.
+
+Meaning:
+- w = write/save
+- q = quit
+
+---
+
+## 4. Quit Without Saving
+Type:
+:q!
+
+Then press Enter.
+
+Meaning:
+- ! = force quit without saving
+
+---
+
+# Full Vim Commit Flow
+
+Run:
+git commit
+
+Then inside Vim:
+
+1. Press:
+i
+
+2. Type commit message:
+Added notes
+
+3. Press:
+Esc
+
+4. Type:
+:wq
+
+5. Press Enter
+
+Git completes the commit.
+
+---
+
+# Undo/Reversing Commits
+
+## 1. Undo Commit But Keep Changes Staged
+git reset --soft HEAD~1
+
+Result:
+- commit removed
+- changes kept
+- changes remain staged
+
+---
+
+## 2. Undo Commit But Keep Changes Unstaged
+git reset HEAD~1
+
+Result:
+- commit removed
+- changes kept
+- changes unstaged
+
+---
+
+## 3. Completely Remove Commit and Changes
+WARNING: Deletes changes permanently.
+
+git reset --hard HEAD~1
+
+Result:
+- commit removed
+- changes deleted
+
+---
+
+# Revert Commit After Push
+If already pushed to GitHub:
+
+git revert <commit-hash>
+
+This safely creates a new commit that undoes old changes.
+
+---
+
+# View Commit History
+git log --oneline
+
+Shows compact commit history.
+
+---
+
+# Quick Reference Table
+
+| Action                         | Command                       |
+|--------------------------------|-------------------------------|
+| Commit with message            | git commit -m "msg"           |
+| Open Vim commit editor         | git commit                    |
+| Enter typing mode in Vim       | i                             |
+| Exit typing mode               | Esc                           |
+| Save and quit Vim              | :wq                           |
+| Quit without saving            | :q!                           |
+| Undo commit keep staged        | git reset --soft HEAD~1       |
+| Undo commit keep unstaged      | git reset HEAD~1              |
+| Delete commit + changes        | git reset --hard HEAD~1       |
+| View commit history            | git log --oneline             |
+
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ARGPARSE — CLI ARGUMENT PARSING
@@ -375,3 +522,44 @@ How remove() works:
   # then saves the shorter list to JSON
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+## Day 5 — NumPy
+
+### Broadcasting Rules (3 rules to memorise)
+1. Arrays are compared shape right-to-left, dimension by dimension
+2. Dimensions are compatible if they are equal OR one of them is 1
+3. If shapes don't match and neither is 1 → ValueError
+
+### Functions I implemented
+- dot_product: sum of element-wise products
+- matmul: @ operator, shape (m,k) @ (k,n) → (m,n)
+- sigmoid: 1/(1+e^-x), squashes to (0,1)
+- softmax: exp(x)/sum(exp(x)), outputs sum to 1
+- mse_loss: mean((y_true - y_pred)²)
+
+### Key .attributes
+- .shape → tuple of dimensions
+- .dtype → data type (float64, int32 etc)
+- .ndim  → number of dimensions
+- .size  → total number of elements
+
+-> numpy.random.randn generates samples from the normal distribution, while numpy.random.rand from a uniform distribution (in the range [0,1)).
+
+## The #1 Tricky Concept
+
+1. Shapes are compared right to left
+2. Dimensions are compatible if they are equal OR one of them is 1
+3. (2,3) + (3,)  → works. Right-to-left: 3==3, then 2 gets broadcast
+4. (2,3) + (2,)  → FAILS. Right-to-left: 3 vs 2, neither is 1
+5. (2,1) + (1,3) → works. Produces (2,3). Both dimensions have a 1.
+
+## NaN Rules (from exercise 17)
+- Any math with NaN = NaN
+- NaN == NaN is FALSE. Always use np.isnan() instead.
+- Floating point: 0.3 != 3*0.1 in Python. Never use == with floats.
+
+## ML Functions Built Today
+- dot_product: sum of element-wise products
+- matrix_multiply: dot product of rows x columns
+- sigmoid: squashes to (0,1). sigmoid(0) = 0.5
+- softmax: converts scores to probabilities summing to 1
+- mse_loss: measures prediction error. Perfect prediction = 0.
