@@ -235,6 +235,9 @@ Example: git commit -m "Added notes"
 git commit
 -This opens Vim editor to write the message manually.
 
+## Command to use when files which are already tracked gets modified or deleted
+- The command git commit -a -m "message" (or git commit -am "message") stages all modified and deleted tracked files and commits them in a single step with the specified message
+- Excludes New Files: It does not include new, untracked files; you must still use git add <newfile> for any newly created files before committing.
 ---
 
 # Basic Vim Commands for Git
