@@ -566,3 +566,29 @@ How remove() works:
 - sigmoid: squashes to (0,1). sigmoid(0) = 0.5
 - softmax: converts scores to probabilities summing to 1
 - mse_loss: measures prediction error. Perfect prediction = 0.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+## Day 6 — Pandas Core + Week 1 Checkpoint
+
+## Week 1 — Confidence Self-Assessment
+
+|   Topic                  | Score |
+| -----------------------  | ----- |
+| Python OOP               | 5/5   |
+| Decorators               | 4/5   |
+| Generators               | 4/5   |
+| Async / Context Managers | 3/5   |
+| Git                      | 5/5   |
+| NumPy                    | 3/5   |
+| Pandas                   | 4/5   |
+
+### My weak spots to watch
+- NumPy: broadcasting, nan behavior, axis parameter
+- Async: re-read Day 3 scraper, trace await line by line
+
+### 5 things I learned this week
+1. @wraps preserves function metadata in decorators
+2. Generators return objects — must iterate to get values
+3. loc uses index labels, iloc uses integer position
+4. df[df['col'] > value] is the filter pattern — not just df['col'] > value
+5. groupby().mean() is how you find survival rates by group
